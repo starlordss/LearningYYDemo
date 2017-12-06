@@ -25,7 +25,7 @@
     // 滚动容器
     _scrollView = [UIScrollView new];
     _scrollView.frame = self.view.bounds;
-    if (kSystemVersion > 7) {
+    if (kiOS7Later) {
         _scrollView.height -= 44;
     }
     [self.view addSubview:_scrollView];
@@ -43,14 +43,16 @@
     [self addImageWithName:@"wall-e" text:@"WEBP"];
     [self addImageWithName:@"pia" text:@"PNG"];
     [self addFrameImageWithText:@"Frame Image"];
-    [self addSpriteSheetImageWithText:@"Sprite Sheet"];
+    [self addSpriteSheetImageWithText:@"Sprite Sheet" name:@"fav02l-sheet@2x.png"];
+    [self addSpriteSheetImageWithText:@"Sprite Sheet" name:@"fav02c-sheet@2x.png"];
+    [self addImageWithName:@"niconiconi" text:@"GIF"];
 }
 
 #pragma mark - 添加图片
 // 添加精灵表单（一张巨大的图片,里面放着许许多多的图片）
-- (void)addSpriteSheetImageWithText:(NSString *)text
+- (void)addSpriteSheetImageWithText:(NSString *)text name:(NSString *)name
 {
-    NSString *path = [[NSBundle mainBundle].bundlePath stringByAppendingPathComponent:@"ResourceTwitter.bundle/fav02l-sheet@2x.png"];
+    NSString *path = [[NSBundle mainBundle].bundlePath stringByAppendingPathComponent:[NSString stringWithFormat:@"ResourceTwitter.bundle/%@",name]];
     UIImage *sheet = [[UIImage alloc] initWithData:[NSData dataWithContentsOfFile:path] scale:2.f];
     // 图片容器
     NSMutableArray *contentRects = [NSMutableArray array];
@@ -89,7 +91,7 @@
     [paths addObject:[basePath stringByAppendingPathComponent:@"d_chijing@3x.png"]];
     [paths addObject:[basePath stringByAppendingPathComponent:@"d_dahaqi@3x.png"]];
     [paths addObject:[basePath stringByAppendingPathComponent:@"d_dahaqi@3x.png"]];
-    [paths addObject:[basePath stringByAppendingPathComponent:@"d_haha@2x.png"]];
+    [paths addObject:[basePath stringByAppendingPathComponent:@"d_haha@3x.png"]];
     [paths addObject:[basePath stringByAppendingPathComponent:@"d_haixiu@3x.png"]];
     
     UIImage *image = [[YYFrameImage alloc] initWithImagePaths:paths oneFrameDuration:0.25 loopCount:0];
@@ -98,16 +100,16 @@
 
 // 普通格式的动图
 - (void)addImageWithName:(NSString *)name text:(NSString *)text {
+    // 支持GIF ... 图片格式
     YYImage *img = [YYImage imageNamed:name];
-//    UIImage *img = [UIImage imageNamed:name];
     [self addImage:img size:CGSizeZero text:text];
 }
 - (void)addImage:(UIImage *)image size:(CGSize)size text:(NSString *)text
 {
-    // 动画图片视图
+    // 动画图片视图：可以图片继续动画
     YYAnimatedImageView *imageView = [[YYAnimatedImageView alloc] initWithImage:image];
 //    UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
-    // 图片有大小才给图片视图的大小复制为原图的大小
+    // 图片不为空 赋值为原始图片大小
     if (size.width > 0 && size.height > 0) imageView.size = size;
     imageView.centerX = self.view.width * 0.5;
     imageView.top = [_scrollView.subviews lastObject].bottom + 30;
@@ -120,14 +122,14 @@
     for (UIGestureRecognizer *g in imageView.gestureRecognizers) {
         g.delegate = self;
     }
-    // 图片标题
+    // 图片文本描述
     UILabel *imageLbl = [UILabel new];
     imageLbl.frame = CGRectMake(0, 0, self.view.width, 20);
     imageLbl.top = imageView.bottom + 10;
     imageLbl.text = text;
     imageLbl.textAlignment = NSTextAlignmentCenter;
     [_scrollView addSubview:imageLbl];
-    
+    // 设置滚动范围
     _scrollView.contentSize = CGSizeMake(self.view.width, imageLbl.bottom + 20);
 }
 
