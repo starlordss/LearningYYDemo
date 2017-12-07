@@ -11,11 +11,11 @@
 #import "MacroDefinition.h"
 
 @interface SZImageProgressiveVC () {
-    UIImageView *_imageView;
+    UIImageView        *_imageView;
     UISegmentedControl *_seg0;
     UISegmentedControl *_seg1;
-    UISlider *_slider0;
-    UISlider *_slider1;
+    UISlider           *_slider0;
+    UISlider           *_slider1;
 }
 
 @end
@@ -28,7 +28,7 @@
     // 样图
     _imageView = [[UIImageView alloc] init];
     _imageView.size = CGSizeMake(300, 300);
-    _imageView.backgroundColor = [UIColor colorWithWhite:0.790 alpha:1.000];
+//    _imageView.backgroundColor = [UIColor colorWithWhite:0.790 alpha:1.000];
     _imageView.centerX = self.view.width * 0.5;
     // segmentedControl0
     _seg0 = [[UISegmentedControl alloc] initWithItems:@[@"Baseline", @"interlaced"]];
@@ -68,7 +68,9 @@
     [self.view addSubview:_slider0];
     [self.view addSubview:_slider1];
     
+
     __weak typeof(self) _self = self;
+    // 添加事件
     [_seg0 addBlockForControlEvents:UIControlEventValueChanged block:^(id  _Nonnull sender) {
         [_self changed];
     }];
@@ -106,11 +108,14 @@
     NSData *data = [NSData dataNamed:name];
     float progress = _slider0.value;
     if (progress > 1) progress = 1;
+    // 通过progress去控制图片数据
     NSData *subData = [data subdataWithRange:NSMakeRange(0, data.length * progress)];
+    // 解码
     YYImageDecoder *decoder = [[YYImageDecoder alloc] initWithScale:[UIScreen mainScreen].scale];
+    // 更新图片数据
     [decoder updateData:subData final:NO];
-    
     YYImageFrame *frame = [decoder frameAtIndex:0 decodeForDisplay:YES];
+    // 通过slider1控制图片的模糊度
     UIImage *image = [frame.image imageByBlurRadius:_slider1.value tintColor:nil tintMode:0 saturation:1 maskImage:nil];
     _imageView.image = image;
     
