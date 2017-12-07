@@ -41,6 +41,7 @@
 - (YYAnimatedImageView *)webImageView{
     if (!_webImageView) {
         _webImageView = [YYAnimatedImageView new];
+        _webImageView.backgroundColor = [UIColor whiteColor];
         _webImageView.size = self.size;
         _webImageView.clipsToBounds = YES;
         _webImageView.contentMode = UIViewContentModeScaleAspectFill;
