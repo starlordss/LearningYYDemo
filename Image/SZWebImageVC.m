@@ -9,7 +9,9 @@
 #import "SZWebImageVC.h"
 #import <YYKit.h>
 
+// 宽度:高度 = 4:3 高度 = 宽度 * 3 / 4
 #define kCellHeight ceil((kScreenWidth) * 3.0 / 4.0)
+// 进度条的高度
 #define klineHeight  4
 
 @interface SZWebImageCell : UITableViewCell
@@ -70,7 +72,6 @@
         _progressLayer.lineCap = kCALineCapButt;
         _progressLayer.strokeStart = 0;
         _progressLayer.strokeEnd = 0;
-        
     }
     return _progressLayer;
 }
@@ -93,7 +94,7 @@
     self.indicator.hidden = NO;
     [self.indicator startAnimating];
     __weak typeof(self) _self = self;
-    // 开启事务
+    // 闭这个隐式动画效果
     [CATransaction begin];
     // 设置禁用操作
     [CATransaction setDisableActions:YES];
@@ -184,18 +185,27 @@ static  NSString *rid = @"CELL";
                        ];
     
     _imgLinks = links;
-    [self.tableView reloadData];
+    [self.tableView reloadData]; // 刷新数据
+    // 执行scrollView代理方法
     [self scrollViewDidScroll:self.tableView];
 }
-
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
     if (kiOS7Later) {
         self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
         self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     }
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
 }
+//- (void)viewDidAppear:(BOOL)animated {
+//    [super viewDidAppear:animated];
+//    if (kiOS7Later) {
+//        self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+//        self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+//    }
+//    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+//}
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
@@ -232,11 +242,14 @@ static  NSString *rid = @"CELL";
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    // 这就是cell的高度
     CGFloat viewHeight = scrollView.height + scrollView.contentInset.top;
     for (SZWebImageCell *cell in self.tableView.visibleCells) {
         CGFloat y = cell.centerY - scrollView.contentOffset.y;
         CGFloat p = y - viewHeight * 0.5;
-        CGFloat scale = cos(p / viewHeight * 0.8) * 0.95;
+        // 0.95控制初始的cell的宽高
+        // p / viewH * x 控制靠近中间cell的角度大小
+        CGFloat scale = cos(p / viewHeight * 0.85) * 0.95;
         if (kiOS8Later) {
             [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionBeginFromCurrentState animations:^{
                 cell.webImageView.transform = CGAffineTransformMakeScale(scale, scale);
