@@ -27,15 +27,15 @@
     return size;
 }
 
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-    if (!CGSizeEqualToSize(self.bounds.size, _preSize)) { // 和上一次的size不相等
-        _preSize = self.bounds.size;
-        [self.layer removeAllAnimations]; // 移除动画
-        [self.layer.sublayers makeObjectsPerformSelector:@selector(removeAllAnimations)];
-    }
-}
+//- (void)layoutSubviews
+//{
+//    [super layoutSubviews];
+//    if (!CGSizeEqualToSize(self.bounds.size, _preSize)) { // 和上一次的size不相等
+//        _preSize = self.bounds.size;
+//        [self.layer removeAllAnimations]; // 移除动画
+//        [self.layer.sublayers makeObjectsPerformSelector:@selector(removeAllAnimations)];
+//    }
+//}
 
 @end
 
