@@ -27,7 +27,7 @@
     NSMutableAttributedString *text = [NSMutableAttributedString new];
     UIFont *font = [UIFont systemFontOfSize:16];
     {
-        NSString *title = @"展示图片附件";
+        NSString *title = @"这是一个UIImage图片附件";
         [text appendAttributedString:[[NSAttributedString alloc] initWithString:title]];
         
         UIImage *img = [UIImage imageNamed:@"dribbble64_imageio"];

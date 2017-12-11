@@ -10,4 +10,6 @@
 
 @interface SZTextHelper : NSObject
 + (void)addDebugOptionToViewController:(UIViewController *)vc;
++ (BOOL)isDebug;
++ (void)setDebug:(BOOL)debug;
 @end
